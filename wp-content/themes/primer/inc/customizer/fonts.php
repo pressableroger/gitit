@@ -40,8 +40,7 @@ class Primer_Customizer_Fonts {
 		 *
 		 * @var array
 		 */
-		$this->fonts = (array) apply_filters(
-			'primer_fonts',
+		$this->fonts = (array) apply_filters( 'primer_fonts',
 			array(
 				'Architects Daughter',
 				'Asap',
@@ -84,8 +83,7 @@ class Primer_Customizer_Fonts {
 		 *
 		 * @var array
 		 */
-		$this->font_types = (array) apply_filters(
-			'primer_font_types',
+		$this->font_types = (array) apply_filters( 'primer_font_types',
 			array(
 				'site_title_font' => array(
 					'label'       => esc_html__( 'Site Title', 'primer' ),
@@ -103,13 +101,12 @@ class Primer_Customizer_Fonts {
 					'default'     => 'Open Sans',
 					'css'         => array(
 						'.main-navigation ul li a, .main-navigation ul li a:visited,
-						button, a.button, a.fl-button, input[type="button"], input[type="reset"], input[type="submit"]' =>
-						array(
+						button, a.button, a.fl-button, input[type="button"], input[type="reset"], input[type="submit"]' => array(
 							'font-family' => '"%1$s", sans-serif',
 						),
 					),
 				),
-				'heading_font'    => array(
+				'heading_font' => array(
 					'label'       => esc_html__( 'Headings', 'primer' ),
 					'description' => esc_html__( 'Post titles, widget titles, form labels, and table headers.', 'primer' ),
 					'default'     => 'Open Sans',
@@ -120,25 +117,12 @@ class Primer_Customizer_Fonts {
 						table th,
 						dl dt,
 						.entry-title,
-						.widget-title' =>
-						array(
-							'font-family' => '"%1$s", sans-serif',
-						),
-					),
-					'editor_css'  => array(
-						'.wp-block h1,
-						.wp-block h2,
-						.wp-block h3,
-						.wp-block h4,
-						.wp-block h5,
-						.wp-block h6,
-						.editor-post-title__block .editor-post-title__input' =>
-						array(
+						.widget-title' => array(
 							'font-family' => '"%1$s", sans-serif',
 						),
 					),
 				),
-				'primary_font'    => array(
+				'primary_font' => array(
 					'label'       => esc_html__( 'Primary', 'primer' ),
 					'description' => esc_html__( 'Paragraphs, lists, links, quotes, and tables.', 'primer' ),
 					'default'     => 'Open Sans',
@@ -148,20 +132,12 @@ class Primer_Customizer_Fonts {
 						ol li,
 						ul li,
 						dl dd,
-						.fl-callout-text' =>
-						array(
-							'font-family' => '"%1$s", sans-serif',
-						),
-					),
-					'editor_css'  => array(
-						'.editor-styles-wrapper.edit-post-visual-editor,
-						.editor-styles-wrapper.edit-post-visual-editor .block-editor-default-block-appender textarea.block-editor-default-block-appender__content' =>
-						array(
+						.fl-callout-text' => array(
 							'font-family' => '"%1$s", sans-serif',
 						),
 					),
 				),
-				'secondary_font'  => array(
+				'secondary_font' => array(
 					'label'       => esc_html__( 'Secondary', 'primer' ),
 					'description' => esc_html__( 'Bylines, comment counts, reply links, post footers, and quote footers.', 'primer' ),
 					'default'     => 'Open Sans',
@@ -172,8 +148,7 @@ class Primer_Customizer_Fonts {
 						.comment-list li .comment-meta .says,
 						.comment-list li .comment-metadata,
 						.comment-reply-link,
-						#respond .logged-in-as' =>
-						array(
+						#respond .logged-in-as' => array(
 							'font-family' => '"%1$s", sans-serif',
 						),
 					),
@@ -190,12 +165,6 @@ class Primer_Customizer_Fonts {
 		add_action( 'customize_register', array( $this, 'fonts' ), 11 );
 		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_google_fonts' ), 11 );
 		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_inline_css' ), 12 );
-
-		add_action( 'customize_controls_enqueue_scripts', array( $this, 'font_control_scripts' ) );
-
-		// Fonts for the block editor.
-		add_action( 'enqueue_block_editor_assets', array( $this, 'enqueue_google_fonts' ), 11 );
-		add_action( 'enqueue_block_editor_assets', array( $this, 'enqueue_block_editor_css' ), 12 );
 
 	}
 
@@ -245,7 +214,7 @@ class Primer_Customizer_Fonts {
 
 			$fonts             = array_combine( $this->fonts, $this->fonts );
 			$default           = $this->get_default_font( $name );
-			$fonts[ $default ] = sprintf( /* translators: font name */ esc_html__( '%s (Default)', 'primer' ), $default );
+			$fonts[ $default ] = sprintf( esc_html_x( '%s (Default)', 'font name', 'primer' ), $default );
 
 			$wp_customize->add_control(
 				$name,
@@ -260,8 +229,6 @@ class Primer_Customizer_Fonts {
 			);
 
 		}
-
-		$suffix = SCRIPT_DEBUG ? '' : '.min';
 
 	}
 
@@ -389,15 +356,14 @@ class Primer_Customizer_Fonts {
 		 *
 		 * @var array
 		 */
-		$query_args = (array) apply_filters(
-			'primer_google_fonts_query_args',
+		$query_args = (array) apply_filters( 'primer_google_fonts_query_args',
 			array(
 				'family' => $font_families,
 				'subset' => 'latin',
 			)
 		);
 
-		wp_enqueue_style( Primer_Customizer::$stylesheet . '-fonts', add_query_arg( $query_args, 'https://fonts.googleapis.com/css' ), array(), PRIMER_VERSION, 'all' );
+		wp_enqueue_style( Primer_Customizer::$stylesheet . '-fonts', add_query_arg( $query_args, '//fonts.googleapis.com/css' ), false );
 
 	}
 
@@ -425,48 +391,6 @@ class Primer_Customizer_Fonts {
 			wp_add_inline_style( Primer_Customizer::$stylesheet . '-fonts', $css );
 
 		}
-
-	}
-
-	/**
-	 * Add inline CSS for the font customizations.
-	 *
-	 * @action enqueue_block_editor_assets
-	 * @since  1.8.7
-	 */
-	public function enqueue_block_editor_css() {
-
-		foreach ( $this->font_types as $name => $args ) {
-
-			if ( empty( $name ) || empty( $args['editor_css'] ) ) {
-
-				continue;
-
-			}
-
-			$css = sprintf(
-				Primer_Customizer::parse_css_rules( $args['editor_css'] ),
-				$this->get_font( $name )
-			);
-
-			wp_add_inline_style( Primer_Customizer::$stylesheet . '-fonts', $css );
-
-		}
-
-	}
-
-	/**
-	 * Enqueue font control scripts.
-	 *
-	 * @action customize_controls_enqueue_scripts
-	 * @since 1.8.3
-	 */
-	public function font_control_scripts() {
-
-		$suffix = SCRIPT_DEBUG ? '' : '.min';
-
-		wp_enqueue_style( 'primer-customizer-fonts', get_template_directory_uri() . "/assets/css/admin/customizer-fonts{$suffix}.css", array(), PRIMER_VERSION, 'all' );
-		wp_enqueue_script( 'primer-customizer-fonts', get_template_directory_uri() . "/assets/js/admin/customizer-fonts{$suffix}.js", array( 'jquery' ), PRIMER_VERSION, true );
 
 	}
 

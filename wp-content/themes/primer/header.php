@@ -52,29 +52,9 @@
 		 */
 		do_action( 'primer_before_header' );
 
-		$masthead_classes = array( 'site-header' );
-
-		if ( has_header_video() && primer_is_amp() ) {
-
-			$masthead_classes[] = 'video-header';
-
-		}
 		?>
 
-		<header id="masthead" class="<?php echo esc_attr( implode( ' ', $masthead_classes ) ); ?>" role="banner">
-
-			<?php
-
-			/**
-			 * Render the video header element
-			 *
-			 * @hooked primer_video_header - 5
-			 *
-			 * @since 1.7.0
-			 */
-			do_action( 'primer_before_header_wrapper' );
-
-			?>
+		<header id="masthead" class="site-header" role="banner">
 
 			<div class="site-header-wrapper">
 

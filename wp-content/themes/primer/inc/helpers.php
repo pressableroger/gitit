@@ -18,7 +18,6 @@
 function primer_get_the_page_title() {
 
 	$title = '';
-	$post  = get_queried_object();
 
 	switch ( true ) {
 
@@ -36,16 +35,18 @@ function primer_get_the_page_title() {
 
 		case is_archive() :
 
-			$title = wp_strip_all_tags( get_the_archive_title() );
+			$title = get_the_archive_title();
 
 			break;
 
 		case is_search() :
 
 			$title = sprintf(
-				/* translators: search term */
-				esc_html__( 'Search Results for: %s', 'primer' ),
-				get_search_query()
+				esc_html_x( 'Search Results for: %s', 'search term', 'primer' ),
+				sprintf(
+					'<span>%s</span>',
+					get_search_query()
+				)
 			);
 
 			break;
@@ -62,7 +63,7 @@ function primer_get_the_page_title() {
 
 			break;
 
-		case ( ! is_post_type_hierarchical( get_post_type( $post ) ) ) :
+		case ( ( $post = get_queried_object() ) && ! is_post_type_hierarchical( get_post_type( $post ) ) ) :
 
 			$show_on_front  = get_option( 'show_on_front' );
 			$page_for_posts = get_option( 'page_for_posts' );
@@ -81,7 +82,7 @@ function primer_get_the_page_title() {
 
 			break;
 
-	} // End switch().
+	}
 
 	/**
 	 * Filter the page title.
@@ -130,20 +131,6 @@ function primer_is_fluid_width() {
 function primer_is_fixed_width() {
 
 	return ( 'fixed' === primer_get_page_width() );
-
-}
-
-/**
- * Check if the response is AMP.
- *
- * @since 1.9
- * @link https://wordpress.org/plugins/amp/
- *
- * @return bool If an AMP response.
- */
-function primer_is_amp() {
-
-	return function_exists( 'is_amp_endpoint' ) && is_amp_endpoint();
 
 }
 
@@ -275,7 +262,7 @@ function primer_get_hero_image_selector() {
  */
 function primer_use_featured_hero_image() {
 
-	$enabled = (bool) get_theme_mod( 'use_featured_hero_image', 1 );
+	$enabled = (bool) get_theme_mod( 'use_featured_hero_image' );
 
 	/**
 	 * Filter if a post's featured image should be the header image.
@@ -330,12 +317,10 @@ function primer_get_hero_image() {
 	 */
 	$size = (string) apply_filters( 'primer_hero_image_size', 'primer-hero' );
 
-	$post = get_queried_object();
-
 	/**
 	 * Featured Image (if enabled)
 	 */
-	if ( primer_use_featured_hero_image() && has_post_thumbnail( $post ) ) {
+	if ( primer_use_featured_hero_image() && ( $post = get_queried_object() ) && has_post_thumbnail( $post ) ) {
 
 		$image = wp_get_attachment_image_src( get_post_thumbnail_id( $post ), $size );
 
@@ -493,7 +478,6 @@ function primer_has_footer_menu() {
  * can be called frequently without any performance concern.
  *
  * @see   primer_has_active_categories_reset()
- *
  * @since 1.0.0
  *
  * @uses [get_transient](https://developer.wordpress.org/reference/functions/get_transient/)
@@ -504,9 +488,7 @@ function primer_has_footer_menu() {
  */
 function primer_has_active_categories() {
 
-	$has_active_categories = get_transient( 'primer_has_active_categories' );
-
-	if ( WP_DEBUG || false === $has_active_categories ) {
+	if ( WP_DEBUG || false === ( $has_active_categories = get_transient( 'primer_has_active_categories' ) ) ) {
 
 		$categories = get_categories(
 			array(
@@ -579,7 +561,6 @@ function primer_hex2rgb( $color ) {
  *
  * @author Frankie Jarrett <fjarrett@gmail.com>
  * @link   https://secure.php.net/manual/en/function.array-replace-recursive.php
- *
  * @since  1.0.0
  *
  * @param  array $array1    The array in which elements are replaced.
@@ -592,16 +573,13 @@ function primer_array_replace_recursive( array $array1, array $array2 ) {
 
 	if ( function_exists( 'array_replace_recursive' ) ) {
 
-		$args = func_get_args();
-
-		return call_user_func_array( 'array_replace_recursive', $args );
+		return call_user_func_array( 'array_replace_recursive', func_get_args() );
 
 	}
 
-	$total  = func_num_args();
 	$result = array();
 
-	for ( $i = 0; $i < $total; $i++ ) {
+	for ( $i = 0, $total = func_num_args(); $i < $total; $i++ ) {
 
 		$_array = func_get_arg( $i );
 
@@ -639,7 +617,6 @@ function primer_array_replace_recursive( array $array1, array $array2 ) {
  * Render a widget in the output buffer and return the markup.
  *
  * @since 1.5.0
- *
  * @uses  [the_widget](https://developer.wordpress.org/reference/functions/the_widget/) To render the widget.
  *
  * @param  string $widget   The widget's PHP class name.
@@ -655,32 +632,5 @@ function primer_get_the_widget( $widget, $instance = array(), $args = array() ) 
 	the_widget( $widget, $instance, $args );
 
 	return ob_get_clean();
-
-}
-
-/**
- * Check if the current theme is Primer or direct Primer child theme
- *
- * @since 1.7.0
- *
- * @uses  [wp_get_theme](https://developer.wordpress.org/reference/functions/wp_get_theme/) To retreive the current theme data.
- *
- * @return boolean True if Primer or custom Primer child theme, otherwise false
- */
-function is_custom_primer_child() {
-
-	$theme = wp_get_theme();
-
-	return ( ! is_child_theme() || ! in_array( $theme->get( 'Name' ), array(
-		'Activation',
-		'Ascension',
-		'Escapade',
-		'Mins',
-		'Scribbles',
-		'Stout',
-		'Lyrical',
-		'Uptown Style',
-		'Velux',
-	), true ) );
 
 }

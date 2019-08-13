@@ -37,17 +37,10 @@ function primer_the_custom_logo() {
 
 	}
 
-	/**
-	 * Filter the custom logo display args.
-	 *
-	 * @since 1.8.0
-	 *
-	 * @var array
-	 */
-	$args = (array) apply_filters( 'primer_the_custom_logo_args', array(
+	$args = array(
 		'class'    => 'custom-logo',
 		'itemprop' => 'logo',
-	) );
+	);
 
 	printf( // xss ok.
 		'<a href="%1$s" class="custom-logo-link" %2$s>%3$s</a>',
@@ -65,60 +58,11 @@ function primer_the_custom_logo() {
  */
 function primer_the_site_title() {
 
-	/**
-	 * Filter the site title display args.
-	 *
-	 * @since 1.8.0
-	 *
-	 * @var array
-	 */
-	$args = (array) apply_filters( 'primer_the_site_title_args', array(
-		'wrapper'   => 'div',
-		'atts'      => array( 'class' => 'site-title' ),
-		'url'       => home_url( '/' ),
-		'link_atts' => array( 'rel' => 'home' ),
-		'title'     => get_bloginfo( 'name' ),
-	) );
-
-	if ( empty( $args['title'] ) ) {
-
-		return;
-
-	}
-
-	$args['atts'] = empty( $args['atts'] ) ? array() : (array) $args['atts'];
-
-	foreach ( $args['atts'] as $key => &$value ) {
-
-		$value = sprintf( '%s="%s"', sanitize_key( $key ), esc_attr( $value ) );
-
-	}
-
-	$args['link_atts'] = empty( $args['link_atts'] ) ? array() : (array) $args['link_atts'];
-
-	foreach ( $args['link_atts'] as $key => &$value ) {
-
-		$value = sprintf( '%s="%s"', sanitize_key( $key ), esc_attr( $value ) );
-
-	}
-
 	$html = sprintf(
-		'<a href="%s" %s>%s</a>',
-		esc_url( $args['url'] ),
-		implode( ' ', $args['link_atts'] ),
-		$args['title']
+		'<h1 class="site-title"><a href="%s" rel="home">%s</a></h1>',
+		esc_url( home_url( '/' ) ),
+		get_bloginfo( 'name' )
 	);
-
-	if ( ! empty( $args['wrapper'] ) ) {
-
-		$html = sprintf(
-			'<%1$s %2$s>%3$s</%1$s>',
-			sanitize_key( $args['wrapper'] ),
-			implode( ' ', $args['atts'] ),
-			$html
-		);
-
-	}
 
 	/**
 	 * Filter the site title HTML.
@@ -138,45 +82,10 @@ function primer_the_site_title() {
  */
 function primer_the_site_description() {
 
-	/**
-	 * Filter the site description display args.
-	 *
-	 * @since 1.8.0
-	 *
-	 * @var array
-	 */
-	$args = (array) apply_filters( 'primer_the_site_description_args', array(
-		'wrapper'     => 'div',
-		'atts'        => array( 'class' => 'site-description' ),
-		'description' => get_bloginfo( 'description' ),
-	) );
-
-	if ( empty( $args['description'] ) ) {
-
-		return;
-
-	}
-
-	$args['atts'] = empty( $args['atts'] ) ? array() : (array) $args['atts'];
-
-	foreach ( $args['atts'] as $key => &$value ) {
-
-		$value = sprintf( '%s="%s"', sanitize_key( $key ), esc_attr( $value ) );
-
-	}
-
-	$html = $args['description'];
-
-	if ( ! empty( $args['wrapper'] ) ) {
-
-		$html = sprintf(
-			'<%1$s %2$s>%3$s</%1$s>',
-			sanitize_key( $args['wrapper'] ),
-			implode( ' ', $args['atts'] ),
-			$html
-		);
-
-	}
+	$html = sprintf(
+		'<div class="site-description">%s</div>',
+		get_bloginfo( 'description' )
+	);
 
 	/**
 	 * Filter the site description HTML.
@@ -190,53 +99,17 @@ function primer_the_site_description() {
 }
 
 /**
- * Display the page title.
+ * Display a page title.
  *
  * @since 1.0.0
  */
 function primer_the_page_title() {
 
-	/**
-	 * Filter the page title display args.
-	 *
-	 * @since 1.8.0
-	 *
-	 * @var array
-	 */
-	$args = (array) apply_filters( 'primer_the_page_title_args', array(
-		'wrapper' => 'h1',
-		'atts'    => array( 'class' => 'page-title' ),
-		'title'   => primer_get_the_page_title(),
-	) );
+	if ( $title = primer_get_the_page_title() ) {
 
-	if ( empty( $args['title'] ) ) {
-
-		return;
+		echo $title; // xss ok.
 
 	}
-
-	$args['atts'] = empty( $args['atts'] ) ? array() : (array) $args['atts'];
-
-	foreach ( $args['atts'] as $key => &$value ) {
-
-		$value = sprintf( '%s="%s"', sanitize_key( $key ), esc_attr( $value ) );
-
-	}
-
-	$html = esc_html( $args['title'] );
-
-	if ( ! empty( $args['wrapper'] ) ) {
-
-		$html = sprintf(
-			'<%1$s %2$s>%3$s</%1$s>',
-			sanitize_key( $args['wrapper'] ),
-			implode( ' ', $args['atts'] ),
-			$html
-		);
-
-	}
-
-	echo $html; // xss ok.
 
 }
 
@@ -277,7 +150,7 @@ function primer_pagination( $args = array() ) {
 	$defaults = (array) apply_filters( 'primer_pagination_default_args', array(
 		'prev_text'          => __( '&larr; Previous', 'primer' ),
 		'next_text'          => __( 'Next &rarr;', 'primer' ),
-		'screen_reader_text' => sprintf( /* translators: post type singular label */ esc_html__( '%1$s navigation', 'primer' ), esc_html( $post_type_label ) ),
+		'screen_reader_text' => sprintf( esc_html_x( '%1$s navigation', 'post type singular label', 'primer' ), esc_html( $post_type_label ) ),
 	), max( 1, get_query_var( 'paged' ) ), absint( $wp_query->max_num_pages ) );
 
 	$args = wp_parse_args( $args, $defaults );
@@ -437,13 +310,13 @@ function primer_breadcrumbs() {
 
 			echo '404';
 
-		} // End if().
+		}
 
 	} else {
 
 		bloginfo( 'name' );
 
-	} // End if().
+	}
 
 	echo '</div>';
 

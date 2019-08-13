@@ -22,7 +22,7 @@ function primer_elements() {
 
 	}
 
-	if ( is_home() ) {
+	if ( ( is_front_page() && (bool) get_post_meta( get_queried_object_id(), '_fl_builder_enabled', true ) ) || is_home() ) {
 
 		remove_action( 'primer_after_header', 'primer_add_page_title', 12 );
 
@@ -30,25 +30,6 @@ function primer_elements() {
 
 }
 add_action( 'template_redirect', 'primer_elements' );
-
-/**
- * Display the video header.
- *
- * @action primer_before_header_wrapper
- * @since  1.7.0
- */
-function primer_video_header() {
-
-	if ( ! is_front_page() || ! function_exists( 'has_header_video' ) || ! has_header_video() ) {
-
-		return;
-
-	}
-
-	the_custom_header_markup();
-
-}
-add_action( 'primer_before_header_wrapper', 'primer_video_header', 5 );
 
 /**
  * Display site title in the header.
@@ -131,58 +112,15 @@ function primer_add_primary_menu() {
 
 	}
 
-	add_filter( 'walker_nav_menu_start_el', 'primer_add_primary_nav_sub_menu_buttons', 10, 3 );
-
 	wp_nav_menu(
 		array(
 			'theme_location' => 'primary',
+			'walker'         => new Primer_Walker_Nav_Menu,
 		)
 	);
 
-	remove_filter( 'walker_nav_menu_start_el', 'primer_add_primary_nav_sub_menu_buttons', 10 );
 }
 add_action( 'primer_site_navigation', 'primer_add_primary_menu' );
-
-/**
- * Filter the HTML output of a nav menu item to add the AMP dropdown button to reveal the sub-menu.
- *
- * @link https://amp-wp.org/documentation/playbooks/navigation-sub-menu-buttons/()
- * @param string $item_output   Nav menu item HTML.
- * @param object $item          Nav menu item.
- * @param int    $depth         Depth.
- * @return string Modified nav menu item HTML.
- */
-function primer_add_primary_nav_sub_menu_buttons( $item_output, $item, $depth ) {
-
-	// Skip when the item has no sub-menu.
-	if ( ! in_array( 'menu-item-has-children', $item->classes, true ) ) {
-		return $item_output;
-	}
-
-	$indent = str_repeat( "\t", $depth );
-
-	$item_output .= "\n";
-
-	// @todo Why not a <button>?
-	$expand_attrs = ' class="expand" role="button" tabindex="0"';
-
-	// Add toggle behavior in AMP.
-	if ( primer_is_amp() ) {
-		$expand_attrs .= sprintf(
-			' on="%s"',
-			esc_attr(
-				sprintf(
-					'tap:menu-item-%d.toggleClass(class="open")',
-					$item->ID
-				)
-			)
-		);
-	}
-
-	$item_output .= "{$indent}<span {$expand_attrs}></span>\n";
-
-	return $item_output;
-}
 
 /**
  * Display primary navigation menu after the header.
@@ -299,36 +237,6 @@ function primer_add_credit() {
 
 }
 add_action( 'primer_site_info', 'primer_add_credit' );
-
-/**
- * Display privacy policy link
- *
- * @action the_privacy_policy_link
- * @since  1.8.3
- */
-function primer_privacy_policy_link() {
-
-	if ( function_exists( 'the_privacy_policy_link' ) ) {
-
-		/**
-		 * Filter the footer privacy policy link display.
-		 *
-		 * @since 1.8.3
-		 *
-		 * @var bool
-		 */
-		if ( ! (bool) apply_filters( 'primer_privacy_policy_link', true ) ) {
-
-			return;
-
-		}
-
-		the_privacy_policy_link();
-
-	}
-
-}
-add_action( 'primer_site_info', 'primer_privacy_policy_link', 7 );
 
 /**
  * Set the post excerpt length to 20 words.
@@ -483,8 +391,7 @@ function primer_wp_title( $title, $sep ) {
 			' %s %s',
 			$sep,
 			sprintf(
-				/* translators: page number */
-				esc_html__( 'Page %d', 'primer' ),
+				esc_html_x( 'Page %d', 'page number', 'primer' ),
 				max( $paged, $page )
 			)
 		);
@@ -495,52 +402,6 @@ function primer_wp_title( $title, $sep ) {
 
 }
 add_filter( 'wp_title', 'primer_wp_title', 10, 2 );
-
-/**
- * Filter the site title HTML wrapper.
- *
- * @filter primer_the_site_title_args
- * @since  1.8.0
- *
- * @param  array $args The site title args.
- *
- * @return array
- */
-function primer_the_site_title_wrapper( $args ) {
-
-	if ( is_home() ) {
-
-		$args['wrapper'] = 'h1';
-
-	}
-
-	return $args;
-
-}
-add_filter( 'primer_the_site_title_args', 'primer_the_site_title_wrapper' );
-
-/**
- * Filter the page title HTML wrapper.
- *
- * @filter primer_the_page_title_args
- * @since  1.8.0
- *
- * @param  array $args The page title args.
- *
- * @return array
- */
-function primer_the_page_title_wrapper( $args ) {
-
-	if ( is_single() ) {
-
-		$args['wrapper'] = 'h2';
-
-	}
-
-	return $args;
-
-}
-add_filter( 'primer_the_page_title_args', 'primer_the_page_title_wrapper' );
 
 /**
  * Customize the default pagination links template.
@@ -567,8 +428,7 @@ function primer_pagination_template( $template, $class ) {
 	$replace = sprintf(
 		'<div class="paging-nav-text">%s</div>%s',
 		sprintf(
-			/* translators: 1. current page number, 2. total number of pages */
-			esc_html__( 'Page %1$d of %2$d', 'primer' ),
+			esc_html_x( 'Page %1$d of %2$d', '1. current page number, 2. total number of pages', 'primer' ),
 			max( 1, get_query_var( 'paged' ) ),
 			absint( $wp_query->max_num_pages )
 		),

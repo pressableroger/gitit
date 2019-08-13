@@ -10,17 +10,6 @@
 
 <div class="hero">
 
-	<?php
-
-	/**
-	 * Fires inside the `.hero` element but before the `.hero-inner` element.
-	 *
-	 * @since 1.7.0
-	 */
-	do_action( 'primer_pre_hero' );
-
-	?>
-
 	<div class="hero-inner">
 
 		<?php

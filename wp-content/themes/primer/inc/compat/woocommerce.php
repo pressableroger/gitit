@@ -16,7 +16,6 @@
  * @uses   [add_theme_support](https://developer.wordpress.org/reference/functions/add_theme_support/) To enable WooCommerce support.
  *
  * @link   https://docs.woothemes.com/document/third-party-custom-theme-compatibility/
- *
  * @since  1.0.0
  */
 function primer_wc_setup() {
@@ -30,7 +29,6 @@ add_action( 'after_setup_theme', 'primer_wc_setup' );
  * Add body class to indicate when WooCommerce is localized.
  *
  * @filter body_class
- *
  * @since  1.6.0
  *
  * @param  array $classes Array of body classes.
@@ -64,7 +62,6 @@ remove_action( 'woocommerce_after_main_content',  'woocommerce_output_content_wr
  * Markup for page wrapper start.
  *
  * @action woocommerce_before_main_content
- *
  * @since  1.0.0
  *
  * @return mixed Returns the opening WooCommerce content wrappers.
@@ -86,7 +83,6 @@ add_action( 'woocommerce_before_main_content', 'primer_wc_wrapper_start' );
  * Markup for page wrapper end.
  *
  * @action woocommerce_after_main_content
- *
  * @since  1.0.0
  *
  * @return mixed Returns the closing WooCommerce content wrappers.
@@ -187,42 +183,10 @@ function primer_wc_shop_title( $title ) {
 
 	}
 
-	if ( is_product() ) {
-
-		$labels = get_post_type_labels( get_post_type_object( 'product' ) );
-
-		$title  = ! empty( $labels->singular_name ) ? $labels->singular_name : $title;
-
-	}
-
 	return $title;
 
 }
 add_filter( 'primer_the_page_title', 'primer_wc_shop_title' );
-
-/**
- * Filter the WooCommerce shop page title element.
- *
- * @filter primer_the_page_title_args
- *
- * @since  1.8.0
- *
- * @param  array $args The page title args.
- *
- * @return array
- */
-function primer_wc_product_page_title_wrapper( $args ) {
-
-	if ( is_product() ) {
-
-		$args['wrapper'] = 'h2';
-
-	}
-
-	return $args;
-
-}
-add_filter( 'primer_the_page_title_args', 'primer_wc_product_page_title_wrapper' );
 
 /**
  * Change the number of shop columns based on the Primer layout.
@@ -230,22 +194,25 @@ add_filter( 'primer_the_page_title_args', 'primer_wc_product_page_title_wrapper'
  * @filter loop_shop_columns
  * @filter woocommerce_related_products_columns
  * @filter woocommerce_upsells_products_columns
- *
  * @global WP_Post $post
- *
  * @uses   [is_shop](https://docs.woocommerce.com/wc-apidocs/function-is_shop.html) To check the if on the WooCommerce shop page.
  * @uses   [wc_get_page_id](https://docs.woocommerce.com/wc-apidocs/function-wc_get_page_id.html) To retreive the WooCommerce page id.
  * @uses   primer_get_layout To check if the current page is three columns.
+ * @since  1.0.0
  *
  * @since  1.0.0
  *
- * @param  int $columns The default number of columns.
+ * @param  int $columns $columns The default number of columns.
  *
  * @return int The number of columns to use.
  */
 function primer_wc_shop_columns( $columns ) {
 
-	if ( 0 === strpos( primer_get_layout( absint( wc_get_page_id( 'shop' ) ) ), 'three-column-' ) ) {
+	global $post;
+
+	$page_id = ( is_shop() ) ? wc_get_page_id( 'shop' ) : $post->ID;
+
+	if ( 0 === strpos( primer_get_layout( absint( $page_id ) ), 'three-column-' ) ) {
 
 		add_filter( 'post_class', 'primer_wc_product_classes' );
 
@@ -264,10 +231,8 @@ add_filter( 'woocommerce_upsells_products_columns', 'primer_wc_shop_columns' );
  * Add post class to support 2-column product layouts in Primer.
  *
  * @filter post_class
- *
  * @global WP_Post $post
  * @global array   $woocommerce_loop
- *
  * @since  1.0.0
  *
  * @param  array $classes Array of body classes.
@@ -329,21 +294,12 @@ function primer_wc_colors( $colors ) {
 				),
 			),
 		),
-		'link_color' => array(
-			'css' => array(
-				'.woocommerce .star-rating' => array(
-					'color' => '%1$s',
-				),
-			),
-		),
 		'button_color' => array(
 			'css' => array(
 				'.woocommerce button.button.alt,
 				.woocommerce input.button.alt,
 				.woocommerce a.button,
 				.woocommerce a.button.alt,
-				.woocommerce button.button.alt.disabled,
-				.woocommerce button.button.alt.disabled:hover,
 				.woocommerce #respond input#submit,
 				.woocommerce .product span.onsale,
 				.primer-wc-cart-menu .widget_shopping_cart p.buttons a,
@@ -429,7 +385,6 @@ add_filter( 'primer_font_types', 'primer_wc_font_types' );
  * Change the theme overrides path for WooCommerce templates.
  *
  * @filter woocommerce_template_path
- *
  * @since  1.6.0
  *
  * @return string
@@ -445,7 +400,6 @@ add_filter( 'woocommerce_template_path', 'primer_wc_template_path' );
  * Load a custom template for WooCommerce 404 pages.
  *
  * @filter template_include
- *
  * @since  1.5.0
  *
  * @param  string $template The path of the template to include.
@@ -463,7 +417,6 @@ add_filter( 'template_include', 'primer_wc_404_template' );
  * Add a custom "Cart" menu item when WooCommerce is active.
  *
  * @filter wp_get_nav_menu_items
- *
  * @since  1.5.0
  *
  * @param  array  $items An array of menu item post objects.
@@ -506,9 +459,7 @@ add_filter( 'wp_get_nav_menu_items', 'primer_wc_generate_cart_menu_item', 20, 2 
  * Append a WooCommerce cart item to a navigation menu.
  *
  * @filter wp_nav_menu_{$menu}_items
- *
  * @global WooCommerce $woocommerce
- *
  * @since  1.5.0
  *
  * @param  string   $items The HTML list content for the menu items.
@@ -572,11 +523,7 @@ function primer_wc_cart_menu( $items, $args ) {
 		</li>',
 		implode( ' ', array_map( 'esc_attr', $classes ) ),
 		$woocommerce->cart->get_cart_total(),
-		esc_html( sprintf(
-			/* translators: WooCommerce shopping cart item count. */
-			_n( '%d item', '%d items', $woocommerce->cart->get_cart_contents_count(), 'primer' ),
-			$woocommerce->cart->get_cart_contents_count()
-		) ),
+		esc_html( sprintf( _n( '%d item', '%d items', $woocommerce->cart->get_cart_contents_count(), 'primer' ), $woocommerce->cart->get_cart_contents_count() ) ),
 		$woocommerce->cart->get_cart_contents_count() ? '<a class="expand" href="#"></a>' : '',
 		$sub_menu
 	);
@@ -589,9 +536,8 @@ function primer_wc_cart_menu( $items, $args ) {
  * Empty the cart total during Customize preview.
  *
  * @filter woocommerce_cart_contents_total
- * @uses   [wc_price](https://docs.woocommerce.com/wc-apidocs/function-wc_price.html) To format the price with a currency symbol.
- *
  * @since  1.5.0
+ * @uses   [wc_price](https://docs.woocommerce.com/wc-apidocs/function-wc_price.html) To format the price with a currency symbol.
  *
  * @return string
  */
@@ -611,7 +557,6 @@ if ( ! function_exists( 'primer_wc_promoted_products' ) ) {
 	 * added products.
 	 *
 	 * @since 1.5.0
-	 *
 	 * @uses  [wc_get_featured_product_ids](https://docs.woocommerce.com/wc-apidocs/function-wc_get_featured_product_ids.html) To retreive the products that are featured.
 	 * @uses  [wc_get_product_ids_on_sale](https://docs.woocommerce.com/wc-apidocs/function-wc_get_product_ids_on_sale.html) To retreive the products that are on sale.
 	 *
@@ -675,7 +620,7 @@ if ( ! function_exists( 'primer_wc_promoted_products' ) ) {
 
 	}
 
-} // End if().
+}
 
 if ( ! function_exists( 'primer_wc_best_selling_products' ) ) {
 
@@ -715,23 +660,4 @@ if ( ! function_exists( 'primer_wc_best_selling_products' ) ) {
 
 	}
 
-} // End if().
-
-/**
- * Prevent WooCommerce product image from loading as the header image
- *
- * @return boolean False if a WooCommerce product, else true
- *
- * @since 1.7.0
- */
-function primer_wc_product_header_image() {
-
-	/**
-	 * Filter whether the WooCommerce product should be used as the header image
-	 *
-	 * @since 1.7.0
-	 */
-	return apply_filters( 'primer_wc_product_header_image', ! is_product() );
-
 }
-add_filter( 'primer_use_featured_hero_image', 'primer_wc_product_header_image' );

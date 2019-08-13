@@ -2,9 +2,8 @@
 Contributors:      godaddy, fjarrett, jonathanbardo, eherman24
 Tags:              custom-background, custom-colors, custom-header, custom-menu, editor-style, featured-images, flexible-header, left-sidebar, one-column, right-sidebar, rtl-language-support, sticky-post, threaded-comments, three-columns, translation-ready, two-columns
 Requires at least: 4.4
-Tested up to:      5.0
-Requires PHP:      5.6.0
-Stable tag:        1.8.7
+Tested up to:      4.7
+Stable tag:        1.6.0
 License:           GPL-2.0
 License URI:       https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -32,7 +31,7 @@ You can fork and contribute back to Primer by visiting [our public repo on GitHu
 
 == Installation ==
 
-1. In your admin panel, navigate to **Appearance > Themes** and click the **Add New** button.
+1. In your admin panel, nagivate to **Appearance > Themes** and click the **Add New** button.
 2. Type **Primer** in the search form and press the **Enter** key on your keyboard.
 3. Click the **Activate** button to begin using Primer on your website.
 4. In your admin panel, navigate to **Appearance > Customize**.
@@ -64,61 +63,6 @@ License: Creative Commons Zero
 Source: https://unsplash.com/photos/v4ZUGlrdVAA
 
 == Changelog ==
-
-= 1.8.7 =
-* New: Introduce compatibility for Google Accelerated Mobile Pages. @props [westonruter](https://github.com/westonruter)
-* Tweak: Introduce editor styles for Coblocks Form block. @props [richtabor](https://github.com/richtabor)
-* Tweak: Introduce ability to add fullwidth alignment to blocks. @props [richtabor](https://github.com/richtabor)
-
-= 1.8.6 =
-* Tweak: Adjust shorthand array syntax to ensure backwards compatibility with PHP < 5.6. @props [evanherman](https://github.com/EvanHerman)
-
-= 1.8.5 =
-* New: Introduce styles for Gutenberg compatibility. @props [evanherman](https://github.com/EvanHerman)
-* Tweak: Update navigation script to fix left side menu item click bug. @props [evanherman](https://github.com/EvanHerman)
-
-= 1.8.4 =
-* New: Introduce accessibility controls & styles for tab navigation through the main nav. @props [evanherman](https://github.com/EvanHerman)
-* Tweak: Add default value of `1` to theme_mod `use_featured_hero_image`. @props [evanherman](https://github.com/EvanHerman)
-
-= 1.8.3 =
-* New: Introduce a privacy policy link in the footer, when set. @props [evanherman](https://github.com/EvanHerman)
-* New: Introduce `primer_privacy_policy_link` filter to enable/disable the privacy policy link in footer. @props [evanherman](https://github.com/EvanHerman)
-* New: Add styles for privacy policy link and cookie comment checkbox & label. @props [evanherman](https://github.com/EvanHerman)
-* New: Add font previews to the customizer when selecting a font. @props [evanherman](https://github.com/EvanHerman)
-* Tweak: Update `primer_wc_shop_columns()` to reference the shop page ID. @props [evanherman](https://github.com/EvanHerman)
-
-= 1.8.2 =
-* Fix: Comment counts showing an extra character. @props [evanherman](https://github.com/EvanHerman)
-* Fix: Bump WooCommerce pagination template to 3.3.1. @props [evanherman](https://github.com/EvanHerman)
-* Fix: WooCommerce pagination padding. @props [evanherman](https://github.com/EvanHerman)
-
-= 1.8.1 =
-* Fix: Prevent customizer title & tagline colors from updating when they are hidden. @props [evanherman](https://github.com/EvanHerman)
-* Fix: Update translation files so translations load correctly. @props [evanherman](https://github.com/EvanHerman)
-* Fix: Remove HTML markup in search results/author archive page titles. @props [evanherman](https://github.com/EvanHerman)
-
-= 1.8.0 =
-* New: Conditionally wrap site titles to improve SEO. @props [evanherman](https://github.com/EvanHerman), [fjarrett](https://github.com/fjarrett)
-* New: Added `sr_RS` (Serbian) translation. @props [lukapaunovic](https://github.com/lukapaunovic)
-* Fix: Remove reference to a missing `search.svg` icon. @props [evanherman](https://github.com/EvanHerman)
-* Fix: Adjust site title width to prevent overlapping with the mobile menu button. @props [evanherman](https://github.com/EvanHerman)
-* Fix: Conditionally load video header for WordPress 4.7 or later. @props [evanherman](https://github.com/EvanHerman), [fjarrett](https://github.com/fjarrett)
-* Fix: Added a missing `@version` docblock to the WooCommerce pagination template to prevent out of date template notices. @props [evanherman](https://github.com/EvanHerman)
-* Fix: Backward compatibility issue when using [Beaver Builder](https://wordpress.org/plugins/beaver-builder-lite-version/) on PHP 5.3. @props [evanherman](https://github.com/EvanHerman), [fjarrett](https://github.com/fjarrett)
-* Fix: Fixed the tertiary sidebar visibility. @props [evanherman](https://github.com/EvanHerman), [fjarrett](https://github.com/fjarrett)
-
-= 1.7.0 =
-* New: Enabled video headers and introduced styles to accommodate full width video headers. @props [evanherman](https://github.com/EvanHerman)
-* New: Introduced new `primer_pre_hero` action. @props [evanherman](https://github.com/EvanHerman)
-* New: Added aria labels on the 'Continue Reading' links for `a11y` improvements. @props [evanherman](https://github.com/EvanHerman)
-* New: Introduced `primer_wc_product_header_image` filter. @props [evanherman](https://github.com/EvanHerman)
-* Tweak: Improved WooCommerce styles. @props [evanherman](https://github.com/EvanHerman)
-* Tweak: Tweak i18n functions, added translator comments. @props [evanherman](https://github.com/EvanHerman)
-* Tweak: Introduced Ninja Form response message styles. @props [evanherman](https://github.com/EvanHerman)
-* Fix: Ensure color schemes work with custom Primer child themes. @props [evanherman](https://github.com/EvanHerman)
-* Fix: Tweaked the WooCommerce product template title. @props [evanherman](https://github.com/EvanHerman)
-* Fix: Prevent WooCommerce single product images from hijacking the header image. @props [evanherman](https://github.com/EvanHerman)
 
 = 1.6.0 =
 * New: Hero Text widget designed for your site's front page @props [jonathanbardo](https://github.com/jonathanbardo), [fjarrett](https://github.com/fjarrett)

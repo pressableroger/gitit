@@ -6,8 +6,6 @@
  *
  * @package Primer
  * @since   1.6.0
- *
- * @version 3.3.1
  */
 
 global $wp_query;
@@ -42,9 +40,9 @@ $post_type_label  = isset( $post_type_labels->singular_name ) ? $post_type_label
 
 <nav class="navigation pagination woocommerce-pagination">
 
-	<h2 class="screen-reader-text"><?php printf( /* translators: post type singular label */ esc_html__( '%s navigation', 'primer' ), esc_html( $post_type_label ) ); ?></h2>
+	<h2 class="screen-reader-text"><?php printf( esc_html_x( '%s navigation', 'post type singular label', 'primer' ), esc_html( $post_type_label ) ); ?></h2>
 
-	<div class="paging-nav-text"><?php printf( /* translators: 1. current page number, 2. total number of pages */ esc_html__( 'Page %1$d of %2$d', 'primer' ), max( 1, get_query_var( 'paged' ) ), absint( $wp_query->max_num_pages ) ); // xss ok. ?></div>
+	<div class="paging-nav-text"><?php printf( esc_html_x( 'Page %1$d of %2$d', '1. current page number, 2. total number of pages', 'primer' ), max( 1, get_query_var( 'paged' ) ), absint( $wp_query->max_num_pages ) ); // xss ok. ?></div>
 
 	<div class="nav-links">
 

@@ -216,7 +216,7 @@ textarea,
       font-size: 14.4px;
       font-size: 0.9rem; } }
 
-h1, h2, h3, h4, h5, h6, .site-title, .page-title {
+h1, h2, h3, h4, h5, h6 {
   clear: both;
   margin-top: 0.2rem;
   margin-bottom: 0.8rem;
@@ -225,8 +225,7 @@ h1, h2, h3, h4, h5, h6, .site-title, .page-title {
   text-rendering: optimizeLegibility;
   color: #353535; }
 
-h1,
-.page-title {
+h1 {
   font-size: 2.5em; }
 
 h2 {
@@ -344,8 +343,6 @@ ul, ol {
 
 ul {
   list-style: disc; }
-  ul ul {
-    list-style: circle; }
 
 ol {
   list-style: decimal; }
@@ -391,14 +388,6 @@ table {
 .widget table th,
 .widget table td {
   text-align: center; }
-
-.nf-response-msg,
-.widget-area .nf-response-msg {
-  font-weight: bold; }
-  .nf-response-msg p:first-child,
-  .widget-area .nf-response-msg p:first-child {
-    font-style: italic;
-    font-weight: normal; }
 
 input[type="text"],
 input[type="email"],

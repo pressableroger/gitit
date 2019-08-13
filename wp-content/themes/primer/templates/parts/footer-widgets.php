@@ -6,9 +6,7 @@
  * @since   1.0.0
  */
 
-$sidebars = primer_get_active_footer_sidebars();
-
-if ( $sidebars ) :
+if ( $sidebars = primer_get_active_footer_sidebars() ) :
 
 	?>
 	<div class="footer-widget-area columns-<?php echo count( $sidebars ); ?>">

@@ -21,13 +21,12 @@ class Primer_Hero_Text_Widget extends WP_Widget {
 			'customize_selective_refresh' => true,
 			'classname'                   => 'widget_text primer-widgets primer-hero-text-widget',
 			'description'                 => sprintf(
-				/* translators: theme name */
-				esc_html__( "A %s theme widget designed for the Hero area on your site's front page.", 'primer' ),
+				esc_html_x( "A %s theme widget designed for the Hero area on your site's front page.", 'theme name', 'primer' ),
 				esc_html( $this->get_current_theme_name() )
 			),
 		);
 
-		parent::__construct( 'primer-hero-text', /* translators: the widget title */ esc_html__( 'Hero Text', 'primer' ), $widget_options );
+		parent::__construct( 'primer-hero-text', esc_html_x( 'Hero Text', 'the widget title', 'primer' ), $widget_options );
 
 		add_action( 'admin_init', array( $this, 'register_scripts' ) );
 
@@ -249,9 +248,7 @@ class Primer_Hero_Text_Widget extends WP_Widget {
 	 */
 	protected function get_current_theme_name() {
 
-		$current_theme = get_option( 'current_theme' );
-
-		if ( $current_theme ) {
+		if ( $current_theme = get_option( 'current_theme' ) ) {
 
 			return $current_theme;
 
